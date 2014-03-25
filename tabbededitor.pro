@@ -6,9 +6,10 @@ SOURCES += \
     tabbededitorplugin.cpp \
     tabsforeditorswidget.cpp
 
-HEADERS += tabbededitorplugin.h \
-        tabbededitor_global.h \
-        tabbededitorconstants.h \
+HEADERS += \
+    tabbededitor_global.h \
+    tabbededitorplugin.h \
+    tabbededitorconstants.h \
     tabsforeditorswidget.h
 
 # Qt Creator linking

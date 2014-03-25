@@ -1,42 +1,48 @@
-#ifndef TABBEDEDITOR_H
-#define TABBEDEDITOR_H
+#ifndef TABBEDEDITORPLUGIN_H
+#define TABBEDEDITORPLUGIN_H
 
 #include "tabbededitor_global.h"
 
 #include <extensionsystem/iplugin.h>
-#include <QFrame>
-#include <coreplugin/editormanager/editormanager.h>
+
+QT_BEGIN_NAMESPACE
+class QFrame;
+QT_END_NAMESPACE
+
+namespace Core {
+class EditorManager;
+}
 
 namespace TabbedEditor {
 namespace Internal {
 
 class TabsForEditorsWidget;
 
-class TabbedEditorPlugin : public ExtensionSystem::IPlugin
+class TABBEDEDITORSHARED_EXPORT TabbedEditorPlugin : public ExtensionSystem::IPlugin
 {
     Q_OBJECT
     Q_PLUGIN_METADATA(IID "org.qt-project.Qt.QtCreatorPlugin" FILE "TabbedEditor.json")
-
-private:
-    TabsForEditorsWidget *tabbedWidget;
-    QFrame *backgroundFrame;
-    bool styleUpdatedToBaseColor;
-    Core::EditorManager *em;
-    QString getQssStringFromColor(const QColor &color);
-
 public:
     TabbedEditorPlugin();
-    ~TabbedEditorPlugin();
 
     bool initialize(const QStringList &arguments, QString *errorString);
     void extensionsInitialized();
     ShutdownFlag aboutToShutdown();
+
 private slots:
     QString getStylesheetPatternFromFile(const QString &filepath);
     void updateStyleToBaseColor();
+
+private:
+    QString getQssStringFromColor(const QColor &color);
+
+    TabsForEditorsWidget *m_tabbedWidget;
+    QFrame *m_backgroundFrame;
+    bool m_styleUpdatedToBaseColor;
+    Core::EditorManager *m_editorManager;
 };
 
 } // namespace Internal
 } // namespace TabbedEditor
 
-#endif // TABBEDEDITOR_H
+#endif // TABBEDEDITORPLUGIN_H

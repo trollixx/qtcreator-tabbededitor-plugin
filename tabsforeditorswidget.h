@@ -1,13 +1,17 @@
-#ifndef TABBEDEDITORVIEW_H
-#define TABBEDEDITORVIEW_H
+#ifndef TABSFOREDITORSWIDGET_H
+#define TABSFOREDITORSWIDGET_H
 
-#include "tabbededitorplugin.h"
+#include <QMap>
+#include <QWidget>
 
-#include <coreplugin/editormanager/ieditor.h>
+QT_BEGIN_NAMESPACE
+class QShortcut;
+class QTabWidget;
+QT_END_NAMESPACE
 
-#include <QtGui>
-#include <QTabWidget>
-#include <QShortcut>
+namespace Core {
+class IEditor;
+}
 
 namespace TabbedEditor {
 namespace Internal {
@@ -18,33 +22,29 @@ class TabsForEditorsWidget : public QWidget
 
 public:
     TabsForEditorsWidget(QWidget * parent = 0);
-    ~TabsForEditorsWidget();
 
-    QWidget *getTabWidget();
-    Core::IEditor *getEditor(QWidget *tab);
-    QWidget *getTab(Core::IEditor *editor);
-
-    bool isEditorWdiget(QObject *obj);
-
-private:
-    QTabWidget *tabWidget;
-    QMap<QWidget*, Core::IEditor*> tabsEditors;
-    QList<QShortcut*> tabShortcuts;
+    QWidget *tabWidget() const;
 
 private slots:
-    void updateCurrentTab(Core::IEditor* editor);
+    void updateCurrentTab(Core::IEditor *getEditor);
     void handleCurrentChanged(int index);
-    void handleEditorOpened(Core::IEditor* editor);
+    void handleEditorOpened(Core::IEditor *getEditor);
     void handlerEditorClosed(QList<Core::IEditor*> editors);
     void handleTabCloseRequested(int index);
-
     void selectTabAction();
-
     void updateTabText();
 
+private:
+    Core::IEditor *getEditor(QWidget *getTab) const;
+    QWidget *getTab(Core::IEditor *getEditor) const;
+    bool isEditorWidget(QObject *obj) const;
+
+    QTabWidget *m_tabWidget;
+    QMap<QWidget*, Core::IEditor*> m_tabsEditors;
+    QList<QShortcut*> m_tabShortcuts;
 };
 
 } // namespace Internal
 } // namespace TabbedEditor
 
-#endif // TABBEDEDITORVIEW_H
+#endif // TABSFOREDITORSWIDGET_H
