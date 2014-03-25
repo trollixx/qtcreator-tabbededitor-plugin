@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/styles">
+        <file>styles/default.qss</file>
+    </qresource>
+    <qresource prefix="/icons">
+        <file>icons/close_button_dark.png</file>
+        <file>icons/close_button_light_grey.png</file>
+    </qresource>
+</RCC>

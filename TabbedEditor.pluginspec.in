@@ -1,0 +1,9 @@
+<plugin name=\"TabbedEditor\" version=\"0.0.3\" compatVersion=\"0.0.3\">
+    <vendor>snasoft</vendor>
+    <copyright>SNA Soft</copyright>
+    <license>same as QtCreator</license>
+    <description>Plugin add tabs for QtCreator</description>
+    <url>https://sourceforge.net/projects/tabbededitor/</url>
+    $$dependencyList
+</plugin>
+
