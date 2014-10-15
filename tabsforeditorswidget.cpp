@@ -150,6 +150,12 @@ void TabsForEditorsWidget::updateTabText()
     if (document->isModified())
         tabTitle += QString::fromUtf8("*");
 
+    Core::EditorManager *em = Core::EditorManager::instance();
+    Core::IEditor *editor = em->activateEditorForDocument(document);
+    QWidget *tabToUpdate = this->getTab(editor);
+    int tabToUpdateIndex = m_tabWidget->indexOf( tabToUpdate );
+    m_tabWidget->setTabText(tabToUpdateIndex , tabTitle);
+    /*
     QList<Core::IEditor*> editors
             = Core::EditorManager::instance()->documentModel()->editorsForDocument(document);
     foreach (Core::IEditor *editor, editors) {
@@ -157,6 +163,7 @@ void TabsForEditorsWidget::updateTabText()
         int tabToUpdateIndex = m_tabWidget->indexOf(tabToUpdate);
         m_tabWidget->setTabText(tabToUpdateIndex, tabTitle);
     }
+    */ 
 }
 
 Core::IEditor *TabsForEditorsWidget::getEditor(QWidget *tab) const
