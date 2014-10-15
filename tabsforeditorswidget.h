@@ -33,6 +33,9 @@ private slots:
     void handleTabCloseRequested(int index);
     void selectTabAction();
     void updateTabText();
+    void prevTabAction();
+    void nextTabAction();
+
 
 private:
     Core::IEditor *getEditor(QWidget *getTab) const;

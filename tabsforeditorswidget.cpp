@@ -1,5 +1,9 @@
 #include "tabsforeditorswidget.h"
+#include "tabbededitorconstants.h"
 
+#include <coreplugin/actionmanager/actionmanager.h>
+#include <coreplugin/coreconstants.h>
+#include <coreplugin/actionmanager/command.h>
 #include <coreplugin/editormanager/editormanager.h>
 #include <coreplugin/idocument.h>
 #include <texteditor/itexteditor.h>
@@ -49,6 +53,19 @@ TabsForEditorsWidget::TabsForEditorsWidget(QWidget *parent) :
         m_tabShortcuts.append(shortcut);
         connect(shortcut, SIGNAL(activated()), SLOT(selectTabAction()));
     }
+    QAction *prevTabAction = new QAction(tr("Switch to previous tab"), this);
+    Core::Command *prevTabCommand = Core::ActionManager::registerAction(prevTabAction,
+                                      TabbedEditor::Constants::PREV_TAB_ID,
+                                      Core::Context(Core::Constants::C_GLOBAL));
+    prevTabCommand->setDefaultKeySequence(QKeySequence(tr("Ctrl+shift+j")));
+    connect(prevTabAction, SIGNAL(triggered()), this, SLOT(prevTabAction()));
+
+    QAction *nextTabAction = new QAction(tr("Switch to next tab"), this);
+    Core::Command *nextTabCommand = Core::ActionManager::registerAction(nextTabAction,
+                                      TabbedEditor::Constants::NEXT_TAB_ID,
+                                      Core::Context(Core::Constants::C_GLOBAL));
+    nextTabCommand->setDefaultKeySequence(QKeySequence(tr("Ctrl+shift+k")));
+    connect(nextTabAction , SIGNAL(triggered()), this, SLOT(nextTabAction()));
 }
 
 QWidget *TabsForEditorsWidget::tabWidget() const
@@ -140,6 +157,31 @@ void TabsForEditorsWidget::selectTabAction()
     m_tabWidget->setCurrentIndex(index);
 }
 
+void TabsForEditorsWidget::prevTabAction()
+{
+  int currentIndex = m_tabWidget->currentIndex();
+  if (currentIndex >= 1)
+  {
+    m_tabWidget->setCurrentIndex(currentIndex - 1);
+  }
+  else
+  {
+    m_tabWidget->setCurrentIndex(m_tabWidget->count() - 1);
+  }
+}
+
+void TabsForEditorsWidget::nextTabAction()
+{
+  int currentIndex = m_tabWidget->currentIndex();
+  if (currentIndex < m_tabWidget->count() - 1)
+  {
+    m_tabWidget->setCurrentIndex(currentIndex + 1);
+  }
+  else
+  {
+    m_tabWidget->setCurrentIndex(0);
+  }
+}
 void TabsForEditorsWidget::updateTabText()
 {
     Core::IDocument *document = qobject_cast<Core::IDocument*>(QObject::sender());
