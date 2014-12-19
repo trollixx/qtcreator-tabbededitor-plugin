@@ -1,0 +1,14 @@
+{
+    \"Name\" : \"TabbedEditor\",
+    \"Version\" : \"0.0.4\",
+    \"CompatVersion\" : \"0.0.4\",
+    \"Vendor\" : \"snasoft\",
+    \"Copyright\" : \"SNA Soft\",
+    \"License\" : \"same as QtCreator\",
+    \"Description\" : \"Plugin add tabs for QtCreator.\",
+    \"Url\" : \"https://sourceforge.net/projects/tabbededitor/\",
+    \"Dependencies\" : [
+        { \"Name\" : \"Core\", \"Version\" : \"3.3.0\" },
+        { \"Name\" : \"TextEditor\", \"Version\" : \"3.3.0\" }
+    ]
+}
