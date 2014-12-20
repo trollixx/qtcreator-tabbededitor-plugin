@@ -4,9 +4,9 @@
 #include <coreplugin/actionmanager/actionmanager.h>
 #include <coreplugin/coreconstants.h>
 #include <coreplugin/actionmanager/command.h>
+#include <coreplugin/editormanager/ieditor.h>
 #include <coreplugin/editormanager/editormanager.h>
 #include <coreplugin/idocument.h>
-#include <texteditor/itexteditor.h>
 
 #include <QShortcut>
 #include <QTabWidget>
@@ -53,6 +53,7 @@ TabsForEditorsWidget::TabsForEditorsWidget(QWidget *parent) :
         m_tabShortcuts.append(shortcut);
         connect(shortcut, SIGNAL(activated()), SLOT(selectTabAction()));
     }
+
     QAction *prevTabAction = new QAction(tr("Switch to previous tab"), this);
     Core::Command *prevTabCommand = Core::ActionManager::registerAction(prevTabAction,
                                       TabbedEditor::Constants::PREV_TAB_ID,
