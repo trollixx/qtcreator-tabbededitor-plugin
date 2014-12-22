@@ -19,7 +19,6 @@ namespace Internal {
 class TabsForEditorsWidget : public QWidget
 {
     Q_OBJECT
-
 public:
     TabsForEditorsWidget(QWidget * parent = 0);
 
@@ -36,15 +35,14 @@ private slots:
     void prevTabAction();
     void nextTabAction();
 
-
 private:
     Core::IEditor *getEditor(QWidget *getTab) const;
     QWidget *getTab(Core::IEditor *getEditor) const;
     bool isEditorWidget(QObject *obj) const;
 
     QTabWidget *m_tabWidget;
-    QMap<QWidget*, Core::IEditor*> m_tabsEditors;
-    QList<QShortcut*> m_tabShortcuts;
+    QMap<QWidget *, Core::IEditor *> m_tabsEditors;
+    QList<QShortcut *> m_tabShortcuts;
 };
 
 } // namespace Internal

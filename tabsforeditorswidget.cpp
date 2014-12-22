@@ -1,4 +1,5 @@
 #include "tabsforeditorswidget.h"
+
 #include "tabbededitorconstants.h"
 
 #include <coreplugin/actionmanager/actionmanager.h>
@@ -30,8 +31,7 @@ TabsForEditorsWidget::TabsForEditorsWidget(QWidget *parent) :
 
     Core::EditorManager *em = Core::EditorManager::instance();
 
-    QList<Core::IEditor*> editors = em->visibleEditors();
-    foreach (Core::IEditor *editor, editors) {
+    foreach (Core::IEditor *editor, em->visibleEditors()) {
         QWidget *tab = new QWidget();
         m_tabWidget->addTab(tab, editor->document()->displayName());
         m_tabsEditors.insert(tab, editor);
