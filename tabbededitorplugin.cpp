@@ -43,7 +43,7 @@ bool TabbedEditorPlugin::initialize(const QStringList &arguments, QString *error
     mainWindow->layout()->setSpacing(0);
 
     QWidget* oldCentralWidget = mainWindow->centralWidget();
-    QWidget* newCentralWidget = new  QWidget(mainWindow);
+    QWidget* newCentralWidget = new QWidget(mainWindow);
     newCentralWidget->setMinimumHeight(0);
 
     QVBoxLayout *newCentralWidgetLayout = new QVBoxLayout();
@@ -84,21 +84,13 @@ QString TabbedEditorPlugin::getStylesheetPatternFromFile(const QString &filepath
 
 void TabbedEditorPlugin::updateStyleToBaseColor()
 {
-    QColor baseColor = Utils::StyleHelper::baseColor();
-    baseColor = baseColor.lighter(130);
-    QString baseColorQSS = getQssStringFromColor(baseColor);
-
-    QColor borderColor = Utils::StyleHelper::borderColor();
-    QString borderColorQSS = getQssStringFromColor(borderColor);
-
-    QColor highlightColor = Utils::StyleHelper::highlightColor();
-    QString highlightColorQSS = getQssStringFromColor(highlightColor);
-
-    QColor selectedTabBorderColor = highlightColor.lighter();
-    QString selectedTabBorderColorQSS = getQssStringFromColor(selectedTabBorderColor);
-
-    QColor shadowColor = Utils::StyleHelper::shadowColor();
-    QString shadowColorQSS = getQssStringFromColor(shadowColor);
+    const QString baseColorQss
+            = getQssStringFromColor(Utils::StyleHelper::baseColor().lighter(130));
+    const QString borderColorQss = getQssStringFromColor(Utils::StyleHelper::borderColor());
+    const QString highlightColorQss = getQssStringFromColor(Utils::StyleHelper::highlightColor());
+    const QString selectedTabBorderColorQss
+            = getQssStringFromColor(Utils::StyleHelper::highlightColor().lighter());
+    const QString shadowColorQSS = getQssStringFromColor(Utils::StyleHelper::shadowColor());
 
     if (m_styleUpdatedToBaseColor) {
         disconnect(m_editorManager, SIGNAL(editorOpened(Core::IEditor*)),
@@ -108,15 +100,15 @@ void TabbedEditorPlugin::updateStyleToBaseColor()
 
     QString stylesheetPattern = getStylesheetPatternFromFile(QString::fromUtf8(":/styles/styles/default.qss"));
 
-    stylesheetPattern = stylesheetPattern.replace(QStringLiteral("%FRAME_BACKGROUND_COLOR%"), highlightColorQSS);
-    stylesheetPattern = stylesheetPattern.replace(QStringLiteral("%TAB_SELECTED_BORDER_COLOR%"), selectedTabBorderColorQSS);
-    stylesheetPattern = stylesheetPattern.replace(QStringLiteral("%TAB_SELECTED_BACKGROUND_COLOR%"), baseColorQSS);
-    stylesheetPattern = stylesheetPattern.replace(QStringLiteral("%TAB_SELECTED_BOTTOM_BORDER_COLOR%"), baseColorQSS);
+    stylesheetPattern = stylesheetPattern.replace(QStringLiteral("%FRAME_BACKGROUND_COLOR%"), highlightColorQss);
+    stylesheetPattern = stylesheetPattern.replace(QStringLiteral("%TAB_SELECTED_BORDER_COLOR%"), selectedTabBorderColorQss);
+    stylesheetPattern = stylesheetPattern.replace(QStringLiteral("%TAB_SELECTED_BACKGROUND_COLOR%"), baseColorQss);
+    stylesheetPattern = stylesheetPattern.replace(QStringLiteral("%TAB_SELECTED_BOTTOM_BORDER_COLOR%"), baseColorQss);
 
     stylesheetPattern = stylesheetPattern.replace(QStringLiteral("%TAB_BACKGROUND_COLOR_FROM%"), shadowColorQSS);
     stylesheetPattern = stylesheetPattern.replace(QStringLiteral("%TAB_BACKGROUND_COLOR_TO%"), shadowColorQSS);
-    stylesheetPattern = stylesheetPattern.replace(QStringLiteral("%TAB_BORDER_COLOR%"), borderColorQSS);
-    stylesheetPattern = stylesheetPattern.replace(QStringLiteral("%TAB_BOTTOM_BORDER_COLOR%"), borderColorQSS);
+    stylesheetPattern = stylesheetPattern.replace(QStringLiteral("%TAB_BORDER_COLOR%"), borderColorQss);
+    stylesheetPattern = stylesheetPattern.replace(QStringLiteral("%TAB_BOTTOM_BORDER_COLOR%"), borderColorQss);
 
     m_backgroundFrame->setStyleSheet(stylesheetPattern);
     m_backgroundFrame->setHidden(false);
@@ -124,16 +116,15 @@ void TabbedEditorPlugin::updateStyleToBaseColor()
     m_styleUpdatedToBaseColor = true;
 }
 
-QString TabbedEditorPlugin::getQssStringFromColor(const QColor &color)
+QString TabbedEditorPlugin::getQssStringFromColor(const QColor &color) const
 {
-    QString qssString = QString::fromUtf8("rgba( ") +
+    return QStringLiteral("rgba( ") +
             QString::number(color.red()) +
-            QString::fromUtf8(", ") +
+            QStringLiteral(", ") +
             QString::number(color.green()) +
-            QString::fromUtf8(", ") +
+            QStringLiteral(", ") +
             QString::number(color.blue()) +
-            QString::fromUtf8(", ") +
+            QStringLiteral(", ") +
             QString::number(color.alpha()) +
-            QString::fromUtf8(" )");
-    return qssString;
+            QStringLiteral(" )");
 }

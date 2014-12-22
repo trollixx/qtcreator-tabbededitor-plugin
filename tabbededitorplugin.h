@@ -34,7 +34,7 @@ private slots:
     void updateStyleToBaseColor();
 
 private:
-    QString getQssStringFromColor(const QColor &color);
+    QString getQssStringFromColor(const QColor &color) const;
 
     TabsForEditorsWidget *m_tabbedWidget;
     QFrame *m_backgroundFrame;
