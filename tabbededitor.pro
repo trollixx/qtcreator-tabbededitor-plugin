@@ -16,11 +16,11 @@ HEADERS += \
 
 ## set the QTC_SOURCE environment variable to override the setting here
 QTCREATOR_SOURCES = $$(QTC_SOURCE)
-isEmpty(QTCREATOR_SOURCES):QTCREATOR_SOURCES=/Users/dj/qt-creator-opensource-src-3.2.1
+isEmpty(QTCREATOR_SOURCES):error("Error. QTC_SOURCE variable must point to Qt Creator sources.")
 
 ## set the QTC_BUILD environment variable to override the setting here
 IDE_BUILD_TREE = $$(QTC_BUILD)
-isEmpty(IDE_BUILD_TREE):IDE_BUILD_TREE=/Users/dj/qt-creator-opensource-src-3.2.1
+isEmpty(IDE_BUILD_TREE):error("Error. QTC_BUILD variable must be set.")
 
 ## uncomment to build plugin into user config directory
 ## <localappdata>/plugins/<ideversion>
