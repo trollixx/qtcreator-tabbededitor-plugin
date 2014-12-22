@@ -1,8 +1,6 @@
 #ifndef TABBEDEDITORPLUGIN_H
 #define TABBEDEDITORPLUGIN_H
 
-#include "tabbededitor_global.h"
-
 #include <extensionsystem/iplugin.h>
 
 QT_BEGIN_NAMESPACE
@@ -18,7 +16,7 @@ namespace Internal {
 
 class TabsForEditorsWidget;
 
-class TABBEDEDITORSHARED_EXPORT TabbedEditorPlugin : public ExtensionSystem::IPlugin
+class TabbedEditorPlugin : public ExtensionSystem::IPlugin
 {
     Q_OBJECT
     Q_PLUGIN_METADATA(IID "org.qt-project.Qt.QtCreatorPlugin" FILE "TabbedEditor.json")

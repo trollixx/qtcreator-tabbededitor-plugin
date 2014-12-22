@@ -34,7 +34,6 @@ SOURCES += \
     tabsforeditorswidget.cpp
 
 HEADERS += \
-    tabbededitor_global.h \
     tabbededitorplugin.h \
     tabbededitorconstants.h \
     tabsforeditorswidget.h
