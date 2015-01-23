@@ -30,6 +30,7 @@ public:
 private slots:
     QString getStylesheetPatternFromFile(const QString &filepath);
     void updateStyleToBaseColor();
+    void showTabBar();
 
 private:
     QString getQssStringFromColor(const QColor &color) const;

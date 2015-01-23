@@ -6,6 +6,7 @@
 #include <coreplugin/icore.h>
 #include <coreplugin/editormanager/editormanager.h>
 #include <utils/stylehelper.h>
+#include <utils/theme/theme.h>
 
 #include <QBoxLayout>
 #include <QFile>
@@ -25,8 +26,10 @@ bool TabbedEditorPlugin::initialize(const QStringList &arguments, QString *error
     Q_UNUSED(arguments)
     Q_UNUSED(errorString)
 
+    connect(Core::ICore::instance(), SIGNAL(themeChanged()), this, SLOT(updateStyleToBaseColor()));
+
     m_editorManager = Core::EditorManager::instance();
-    connect(m_editorManager, SIGNAL(editorOpened(Core::IEditor*)), SLOT(updateStyleToBaseColor()));
+    connect(m_editorManager, SIGNAL(editorOpened(Core::IEditor*)), SLOT(showTabBar()));
 
     m_backgroundFrame = new QFrame();
     m_backgroundFrame->setMinimumHeight(25);
@@ -84,19 +87,38 @@ QString TabbedEditorPlugin::getStylesheetPatternFromFile(const QString &filepath
 
 void TabbedEditorPlugin::updateStyleToBaseColor()
 {
-    const QString baseColorQss
-            = getQssStringFromColor(Utils::StyleHelper::baseColor().lighter(130));
-    const QString borderColorQss = getQssStringFromColor(Utils::StyleHelper::borderColor());
-    const QString highlightColorQss = getQssStringFromColor(Utils::StyleHelper::highlightColor());
-    const QString selectedTabBorderColorQss
-            = getQssStringFromColor(Utils::StyleHelper::highlightColor().lighter());
-    const QString shadowColorQSS = getQssStringFromColor(Utils::StyleHelper::shadowColor());
 
-    if (m_styleUpdatedToBaseColor) {
-        disconnect(m_editorManager, SIGNAL(editorOpened(Core::IEditor*)),
-                   this, SLOT(updateStyleToBaseColor()));
-        return;
+    Utils::Theme *theme = Utils::creatorTheme();
+
+    QString baseColorQss;
+    QString borderColorQss;
+    QString highlightColorQss;
+    QString selectedTabBorderColorQss;
+    QString shadowColorQSS;
+
+    if(theme->widgetStyle() == Utils::Theme::StyleDefault)
+    {
+
+        baseColorQss = getQssStringFromColor(Utils::StyleHelper::baseColor().lighter(130));
+        borderColorQss = getQssStringFromColor(Utils::StyleHelper::borderColor());
+        highlightColorQss = getQssStringFromColor(Utils::StyleHelper::baseColor());
+        selectedTabBorderColorQss
+                = getQssStringFromColor(Utils::StyleHelper::highlightColor().lighter());
+        shadowColorQSS = getQssStringFromColor(Utils::StyleHelper::shadowColor());
     }
+    // Flat widget style
+    else
+    {
+        baseColorQss
+                = getQssStringFromColor(theme->color(Utils::Theme::BackgroundColorHover));
+        borderColorQss = getQssStringFromColor(theme->color(Utils::Theme::BackgroundColorHover));
+        highlightColorQss = getQssStringFromColor(theme->color(Utils::Theme::BackgroundColorDark));
+        selectedTabBorderColorQss
+                = getQssStringFromColor(theme->color(Utils::Theme::BackgroundColorDark));
+        shadowColorQSS = getQssStringFromColor(theme->color(Utils::Theme::BackgroundColorNormal));
+    }
+
+
 
     QString stylesheetPattern = getStylesheetPatternFromFile(QString::fromUtf8(":/styles/styles/default.qss"));
 
@@ -111,9 +133,21 @@ void TabbedEditorPlugin::updateStyleToBaseColor()
     stylesheetPattern = stylesheetPattern.replace(QStringLiteral("%TAB_BOTTOM_BORDER_COLOR%"), borderColorQss);
 
     m_backgroundFrame->setStyleSheet(stylesheetPattern);
-    m_backgroundFrame->setHidden(false);
 
-    m_styleUpdatedToBaseColor = true;
+}
+
+void TabbedEditorPlugin::showTabBar()
+{
+    updateStyleToBaseColor();
+
+    if (m_styleUpdatedToBaseColor) {
+        disconnect(m_editorManager, SIGNAL(editorOpened(Core::IEditor*)),
+                   this, SLOT(showTabBar()));
+        return;
+    }
+
+     m_backgroundFrame->setHidden(false);
+     m_styleUpdatedToBaseColor = true;
 }
 
 QString TabbedEditorPlugin::getQssStringFromColor(const QColor &color) const
