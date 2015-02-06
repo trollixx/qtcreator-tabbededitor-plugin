@@ -185,7 +185,10 @@ void TabsForEditorsWidget::nextTabAction()
 }
 void TabsForEditorsWidget::updateTabText()
 {
-    Core::IDocument *document = qobject_cast<Core::IDocument*>(QObject::sender());
+    Core::EditorManager *em = Core::EditorManager::instance();
+    Core::IEditor *editor = em->currentEditor();
+
+    Core::IDocument *document = editor->document();
     if (!document)
         return;
 
@@ -193,8 +196,6 @@ void TabsForEditorsWidget::updateTabText()
     if (document->isModified())
         tabTitle += QString::fromUtf8("*");
 
-    Core::EditorManager *em = Core::EditorManager::instance();
-    Core::IEditor *editor = em->activateEditorForDocument(document);
     QWidget *tabToUpdate = this->getTab(editor);
     int tabToUpdateIndex = m_tabWidget->indexOf( tabToUpdate );
     m_tabWidget->setTabText(tabToUpdateIndex , tabTitle);
