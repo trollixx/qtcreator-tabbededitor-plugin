@@ -37,8 +37,8 @@ bool TabbedEditorPlugin::initialize(const QStringList &arguments, QString *error
     QMainWindow *mainWindow = qobject_cast<QMainWindow *>(Core::ICore::mainWindow());
     mainWindow->layout()->setSpacing(0);
 
-    QWidget* oldCentralWidget = mainWindow->centralWidget();
-    QWidget* newCentralWidget = new QWidget(mainWindow);
+    QWidget *oldCentralWidget = mainWindow->centralWidget();
+    QWidget *newCentralWidget = new QWidget(mainWindow);
     newCentralWidget->setMinimumHeight(0);
 
     QVBoxLayout *newCentralWidgetLayout = new QVBoxLayout();
@@ -77,19 +77,14 @@ void TabbedEditorPlugin::updateStyleToBaseColor()
     QString selectedTabBorderColorQss;
     QString shadowColorQss;
 
-    if(theme->widgetStyle() == Utils::Theme::StyleDefault)
-    {
-
+    if(theme->widgetStyle() == Utils::Theme::StyleDefault) {
         baseColorQss = getQssStringFromColor(Utils::StyleHelper::baseColor().lighter(130));
         borderColorQss = getQssStringFromColor(Utils::StyleHelper::borderColor());
         highlightColorQss = getQssStringFromColor(Utils::StyleHelper::baseColor());
         selectedTabBorderColorQss
                 = getQssStringFromColor(Utils::StyleHelper::highlightColor().lighter());
         shadowColorQss = getQssStringFromColor(Utils::StyleHelper::shadowColor());
-    }
-    // Flat widget style
-    else
-    {
+    } else { // Flat widget style
         baseColorQss
                 = getQssStringFromColor(theme->color(Utils::Theme::BackgroundColorHover));
         borderColorQss = getQssStringFromColor(theme->color(Utils::Theme::BackgroundColorHover));

@@ -55,18 +55,20 @@ TabsForEditorsWidget::TabsForEditorsWidget(QWidget *parent) :
     }
 
     QAction *prevTabAction = new QAction(tr("Switch to previous tab"), this);
-    Core::Command *prevTabCommand = Core::ActionManager::registerAction(prevTabAction,
-                                      TabbedEditor::Constants::PREV_TAB_ID,
-                                      Core::Context(Core::Constants::C_GLOBAL));
+    Core::Command *prevTabCommand
+            = Core::ActionManager::registerAction(prevTabAction,
+                                                  TabbedEditor::Constants::PREV_TAB_ID,
+                                                  Core::Context(Core::Constants::C_GLOBAL));
     prevTabCommand->setDefaultKeySequence(QKeySequence(tr("Ctrl+shift+j")));
     connect(prevTabAction, SIGNAL(triggered()), this, SLOT(prevTabAction()));
 
     QAction *nextTabAction = new QAction(tr("Switch to next tab"), this);
-    Core::Command *nextTabCommand = Core::ActionManager::registerAction(nextTabAction,
-                                      TabbedEditor::Constants::NEXT_TAB_ID,
-                                      Core::Context(Core::Constants::C_GLOBAL));
+    Core::Command *nextTabCommand
+            = Core::ActionManager::registerAction(nextTabAction,
+                                                  TabbedEditor::Constants::NEXT_TAB_ID,
+                                                  Core::Context(Core::Constants::C_GLOBAL));
     nextTabCommand->setDefaultKeySequence(QKeySequence(tr("Ctrl+shift+k")));
-    connect(nextTabAction , SIGNAL(triggered()), this, SLOT(nextTabAction()));
+    connect(nextTabAction, SIGNAL(triggered()), this, SLOT(nextTabAction()));
 }
 
 QWidget *TabsForEditorsWidget::tabWidget() const
@@ -160,28 +162,20 @@ void TabsForEditorsWidget::selectTabAction()
 
 void TabsForEditorsWidget::prevTabAction()
 {
-  int currentIndex = m_tabWidget->currentIndex();
-  if (currentIndex >= 1)
-  {
-    m_tabWidget->setCurrentIndex(currentIndex - 1);
-  }
-  else
-  {
-    m_tabWidget->setCurrentIndex(m_tabWidget->count() - 1);
-  }
+    int currentIndex = m_tabWidget->currentIndex();
+    if (currentIndex >= 1)
+        m_tabWidget->setCurrentIndex(currentIndex - 1);
+    else
+        m_tabWidget->setCurrentIndex(m_tabWidget->count() - 1);
 }
 
 void TabsForEditorsWidget::nextTabAction()
 {
-  int currentIndex = m_tabWidget->currentIndex();
-  if (currentIndex < m_tabWidget->count() - 1)
-  {
-    m_tabWidget->setCurrentIndex(currentIndex + 1);
-  }
-  else
-  {
-    m_tabWidget->setCurrentIndex(0);
-  }
+    int currentIndex = m_tabWidget->currentIndex();
+    if (currentIndex < m_tabWidget->count() - 1)
+        m_tabWidget->setCurrentIndex(currentIndex + 1);
+    else
+        m_tabWidget->setCurrentIndex(0);
 }
 void TabsForEditorsWidget::updateTabText()
 {
@@ -197,8 +191,8 @@ void TabsForEditorsWidget::updateTabText()
         tabTitle += QLatin1Char('*');
 
     QWidget *tabToUpdate = this->getTab(editor);
-    int tabToUpdateIndex = m_tabWidget->indexOf( tabToUpdate );
-    m_tabWidget->setTabText(tabToUpdateIndex , tabTitle);
+    int tabToUpdateIndex = m_tabWidget->indexOf(tabToUpdate);
+    m_tabWidget->setTabText(tabToUpdateIndex, tabTitle);
     /*
     QList<Core::IEditor*> editors
             = Core::EditorManager::instance()->documentModel()->editorsForDocument(document);

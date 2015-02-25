@@ -20,7 +20,7 @@ class TabsForEditorsWidget : public QWidget
 {
     Q_OBJECT
 public:
-    TabsForEditorsWidget(QWidget * parent = 0);
+    TabsForEditorsWidget(QWidget *parent = 0);
 
     QWidget *tabWidget() const;
 
