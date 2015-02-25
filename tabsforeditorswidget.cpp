@@ -207,7 +207,7 @@ void TabsForEditorsWidget::updateTabText()
         int tabToUpdateIndex = m_tabWidget->indexOf(tabToUpdate);
         m_tabWidget->setTabText(tabToUpdateIndex, tabTitle);
     }
-    */ 
+    */
 }
 
 Core::IEditor *TabsForEditorsWidget::getEditor(QWidget *tab) const
