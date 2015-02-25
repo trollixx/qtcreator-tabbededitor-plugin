@@ -31,7 +31,6 @@ private slots:
     void handlerEditorClosed(QList<Core::IEditor*> editors);
     void handleTabCloseRequested(int index);
     void selectTabAction();
-    void updateTabText();
     void prevTabAction();
     void nextTabAction();
 
