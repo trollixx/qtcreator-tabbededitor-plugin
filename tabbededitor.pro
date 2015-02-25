@@ -40,3 +40,6 @@ HEADERS += \
 
 RESOURCES += \
     resources/res.qrc
+
+OTHER_FILES += \
+    README.md
