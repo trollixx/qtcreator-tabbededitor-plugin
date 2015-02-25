@@ -15,8 +15,6 @@ isEmpty(QTCREATOR_SOURCES):error("Error. QTC_SOURCE variable must point to Qt Cr
 IDE_BUILD_TREE = $$(QTC_BUILD)
 isEmpty(IDE_BUILD_TREE):error("Error. QTC_BUILD variable must be set.")
 
-include($$QTCREATOR_SOURCES/src/qtcreatorplugin.pri)
-
 ## uncomment to build plugin into user config directory
 ## <localappdata>/plugins/<ideversion>
 ##    where <localappdata> is e.g.
@@ -24,6 +22,8 @@ include($$QTCREATOR_SOURCES/src/qtcreatorplugin.pri)
 ##    "$XDG_DATA_HOME/data/QtProject/qtcreator" or "~/.local/share/data/QtProject/qtcreator" on Linux
 ##    "~/Library/Application Support/QtProject/Qt Creator" on Mac
 # USE_USER_DESTDIR = yes
+
+include($$QTCREATOR_SOURCES/src/qtcreatorplugin.pri)
 
 DEFINES += TABBEDEDITOR_LIBRARY
 
