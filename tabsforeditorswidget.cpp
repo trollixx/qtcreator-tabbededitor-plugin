@@ -44,7 +44,7 @@ TabsForEditorsWidget::TabsForEditorsWidget(QWidget *parent) :
     connect(m_tabWidget, SIGNAL(currentChanged(int)), SLOT(handleCurrentChanged(int)));
     connect(m_tabWidget, SIGNAL(tabCloseRequested(int)), SLOT(handleTabCloseRequested(int)));
 
-    QString shortCutSequence = QLatin1String("Ctrl+Alt+%1");
+    const QString shortCutSequence = QStringLiteral("Ctrl+Alt+%1");
     for (int i = 1; i <= 10; ++i) {
         int key = i;
         if (key == 10)
@@ -194,7 +194,7 @@ void TabsForEditorsWidget::updateTabText()
 
     QString tabTitle = document->displayName();
     if (document->isModified())
-        tabTitle += QString::fromUtf8("*");
+        tabTitle += QLatin1Char('*');
 
     QWidget *tabToUpdate = this->getTab(editor);
     int tabToUpdateIndex = m_tabWidget->indexOf( tabToUpdate );
