@@ -59,8 +59,10 @@ TabBar::TabBar(QWidget *parent) :
         if (key == 10)
             key = 0;
         QShortcut *shortcut = new QShortcut(shortCutSequence.arg(key), this);
+        connect(shortcut, &QShortcut::activated, [this, shortcut]() {
+            setCurrentIndex(m_shortcuts.indexOf(shortcut));
+        });
         m_shortcuts.append(shortcut);
-        connect(shortcut, SIGNAL(activated()), SLOT(selectTabAction()));
     }
 
     QAction *prevTabAction = new QAction(tr("Switch to previous tab"), this);
@@ -133,15 +135,6 @@ void TabBar::handleTabCloseRequested(int index)
 
     Core::EditorManager::instance()->closeEditor(m_editors.takeAt(index));
     removeTab(index);
-}
-
-void TabBar::selectTabAction()
-{
-    QShortcut *shortcut = qobject_cast<QShortcut*>(sender());
-    if (!shortcut)
-        return;
-    int index = m_shortcuts.indexOf(shortcut);
-    setCurrentIndex(index);
 }
 
 void TabBar::prevTabAction()
