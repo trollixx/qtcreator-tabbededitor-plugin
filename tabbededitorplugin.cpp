@@ -23,36 +23,23 @@ bool TabbedEditorPlugin::initialize(const QStringList &arguments, QString *error
     connect(Core::ICore::instance(), SIGNAL(themeChanged()), this, SLOT(updateStyleToBaseColor()));
     connect(Core::EditorManager::instance(), SIGNAL(editorOpened(Core::IEditor*)), SLOT(showTabBar()));
 
-    m_backgroundFrame = new QFrame();
-    m_backgroundFrame->setMinimumHeight(25);
-    m_backgroundFrame->setMaximumHeight(25);
-
-    QHBoxLayout *layout = new QHBoxLayout();
-    layout->setSpacing(0);
-    layout->setContentsMargins(0, 0, 0, 0);
-    m_tabBar = new TabsForEditorsWidget(m_backgroundFrame);
-    layout->addWidget(m_tabBar);
-    m_backgroundFrame->setLayout(layout);
-
     QMainWindow *mainWindow = qobject_cast<QMainWindow *>(Core::ICore::mainWindow());
     mainWindow->layout()->setSpacing(0);
 
-    QWidget *oldCentralWidget = mainWindow->centralWidget();
-    QWidget *newCentralWidget = new QWidget(mainWindow);
-    newCentralWidget->setMinimumHeight(0);
+    QWidget *wrapper = new QWidget(mainWindow);
+    wrapper->setMinimumHeight(0);
 
-    QVBoxLayout *newCentralWidgetLayout = new QVBoxLayout();
-    newCentralWidgetLayout->setSpacing(0);
-    newCentralWidgetLayout->setContentsMargins(0, 0, 0, 0);
+    QVBoxLayout *layout = new QVBoxLayout();
+    layout->setSpacing(0);
+    layout->setContentsMargins(0, 0, 0, 0);
 
-    newCentralWidgetLayout->addWidget(m_backgroundFrame);
-    newCentralWidgetLayout->addWidget(oldCentralWidget);
+    m_tabBar = new TabsForEditorsWidget();
+    layout->addWidget(m_tabBar);
+    layout->addWidget(mainWindow->centralWidget());
 
-    newCentralWidget->setLayout(newCentralWidgetLayout);
+    wrapper->setLayout(layout);
 
-    mainWindow->setCentralWidget(newCentralWidget);
-
-    m_backgroundFrame->setHidden(true);
+    mainWindow->setCentralWidget(wrapper);
 
     return true;
 }
@@ -104,7 +91,7 @@ void TabbedEditorPlugin::updateStyleToBaseColor()
     stylesheetPattern = stylesheetPattern.replace(QLatin1String("%TAB_BORDER_COLOR%"), borderColorQss);
     stylesheetPattern = stylesheetPattern.replace(QLatin1String("%TAB_BOTTOM_BORDER_COLOR%"), borderColorQss);
 
-    m_backgroundFrame->setStyleSheet(stylesheetPattern);
+    m_tabBar->setStyleSheet(stylesheetPattern);
 }
 
 void TabbedEditorPlugin::showTabBar()
@@ -117,7 +104,6 @@ void TabbedEditorPlugin::showTabBar()
         return;
     }
 
-    m_backgroundFrame->setHidden(false);
     m_styleUpdatedToBaseColor = true;
 }
 

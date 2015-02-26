@@ -29,7 +29,6 @@ private:
     static inline QString getQssStringFromColor(const QColor &color);
 
     TabsForEditorsWidget *m_tabBar = nullptr;
-    QFrame *m_backgroundFrame = nullptr;
     bool m_styleUpdatedToBaseColor = false;
 };
 
