@@ -1,3 +1,12 @@
+QTabBar {
+    background-color: %FRAME_BACKGROUND_COLOR%; /*#848484*/
+    height: 20px;
+}
+
+QTabBar::tear {
+    width: 0px;
+}
+
 QTabBar::tab:selected>.QTabBar::close-button {
     image: url(:/icons/icons/close_button_dark.png);
     subcontrol-position: right;
@@ -13,27 +22,9 @@ QTabBar::close-button:hover {
     subcontrol-position: right;
 }
 
-QFrame {
-    background-color: %FRAME_BACKGROUND_COLOR%; /*#848484*/
-    margin-bottom: -3px;
-    height: 20px;
-}
-
-QTabBar::tear {
-    width: 0px;
-}
-
 QToolButton {
     background-color: %TAB_SELECTED_BACKGROUND_COLOR% ; /* #636363*/
     border: 1px solid %TAB_BORDER_COLOR%; /*#9a9a9a*/
-}
-
-/* Style the tab using the tab sub-control. Note that it reads QTabBar _not_ QTabWidget */
-QTabBar::tab:selected {
-    background-color: %TAB_SELECTED_BACKGROUND_COLOR% ; /* #636363*/
-    border: 1px solid %TAB_SELECTED_BORDER_COLOR%; /*#9a9a9a*/
-    border-bottom-color: %TAB_SELECTED_BOTTOM_BORDER_COLOR%; /*#636363  same as the pane color */
-    color: white;
 }
 
 QTabBar::tab {
@@ -44,7 +35,7 @@ QTabBar::tab {
     color: #EEEEEE;
 
     border: 1px solid %TAB_BORDER_COLOR%; /*#313131*/
-    border-bottom-color: %TAB_BOTTOM_BORDER_COLOR%; /* #313131 same as the pane color */
+    border-bottom: none;
     border-top-left-radius: 2px;
     border-top-right-radius: 2px;
     height: 18px;
@@ -56,4 +47,11 @@ QTabBar::tab {
     padding-right: 8px;
     margin-top: 1px;
     margin-left: 5px;
+}
+
+/* Style the tab using the tab sub-control. Note that it reads QTabBar _not_ QTabWidget */
+QTabBar::tab:selected {
+    background-color: %TAB_SELECTED_BACKGROUND_COLOR% ; /* #636363*/
+    border: 1px solid %TAB_SELECTED_BORDER_COLOR%; /*#9a9a9a*/
+    color: white;
 }
