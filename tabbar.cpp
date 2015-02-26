@@ -55,10 +55,7 @@ TabBar::TabBar(QWidget *parent) :
 
     const QString shortCutSequence = QStringLiteral("Ctrl+Alt+%1");
     for (int i = 1; i <= 10; ++i) {
-        int key = i;
-        if (key == 10)
-            key = 0;
-        QShortcut *shortcut = new QShortcut(shortCutSequence.arg(key), this);
+        QShortcut *shortcut = new QShortcut(shortCutSequence.arg(i % 10), this);
         connect(shortcut, &QShortcut::activated, [this, shortcut]() {
             setCurrentIndex(m_shortcuts.indexOf(shortcut));
         });
@@ -70,7 +67,7 @@ TabBar::TabBar(QWidget *parent) :
             = Core::ActionManager::registerAction(prevTabAction,
                                                   TabbedEditor::Constants::PREV_TAB_ID,
                                                   Core::Context(Core::Constants::C_GLOBAL));
-    prevTabCommand->setDefaultKeySequence(QKeySequence(tr("Ctrl+shift+j")));
+    prevTabCommand->setDefaultKeySequence(QKeySequence(tr("Ctrl+Shift+J")));
     connect(prevTabAction, SIGNAL(triggered()), this, SLOT(prevTabAction()));
 
     QAction *nextTabAction = new QAction(tr("Switch to next tab"), this);
@@ -78,7 +75,7 @@ TabBar::TabBar(QWidget *parent) :
             = Core::ActionManager::registerAction(nextTabAction,
                                                   TabbedEditor::Constants::NEXT_TAB_ID,
                                                   Core::Context(Core::Constants::C_GLOBAL));
-    nextTabCommand->setDefaultKeySequence(QKeySequence(tr("Ctrl+shift+k")));
+    nextTabCommand->setDefaultKeySequence(QKeySequence(tr("Ctrl+Shift+K")));
     connect(nextTabAction, SIGNAL(triggered()), this, SLOT(nextTabAction()));
 }
 
