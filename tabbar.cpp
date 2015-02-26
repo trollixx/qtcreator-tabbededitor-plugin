@@ -10,6 +10,7 @@
 #include <coreplugin/fileiconprovider.h>
 #include <coreplugin/idocument.h>
 
+#include <QMouseEvent>
 #include <QShortcut>
 #include <QTabBar>
 
@@ -159,4 +160,11 @@ void TabBar::nextTabAction()
         setCurrentIndex(index + 1);
     else
         setCurrentIndex(0);
+}
+
+void TabBar::mouseReleaseEvent(QMouseEvent *event)
+{
+    if (event->button() == Qt::MiddleButton)
+        handleTabCloseRequested(tabAt(event->pos()));
+    QTabBar::mouseReleaseEvent(event);
 }

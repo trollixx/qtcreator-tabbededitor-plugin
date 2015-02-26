@@ -30,6 +30,9 @@ private slots:
     void prevTabAction();
     void nextTabAction();
 
+protected:
+    void mouseReleaseEvent(QMouseEvent *event) override;
+
 private:
     QList<Core::IEditor *> m_editors;
     QList<QShortcut *> m_shortcuts;
