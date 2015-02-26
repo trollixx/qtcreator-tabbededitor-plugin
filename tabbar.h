@@ -1,5 +1,5 @@
-#ifndef TABSFOREDITORSWIDGET_H
-#define TABSFOREDITORSWIDGET_H
+#ifndef TABBAR_H
+#define TABBAR_H
 
 #include <QTabBar>
 
@@ -14,11 +14,11 @@ class IEditor;
 namespace TabbedEditor {
 namespace Internal {
 
-class TabsForEditorsWidget : public QTabBar
+class TabBar : public QTabBar
 {
     Q_OBJECT
 public:
-    TabsForEditorsWidget(QWidget *parent = 0);
+    explicit TabBar(QWidget *parent = 0);
 
 private slots:
     void updateCurrentTab(Core::IEditor *editor);
@@ -38,4 +38,4 @@ private:
 } // namespace Internal
 } // namespace TabbedEditor
 
-#endif // TABSFOREDITORSWIDGET_H
+#endif // TABBAR_H

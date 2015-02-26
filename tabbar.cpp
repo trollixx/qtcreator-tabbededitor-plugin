@@ -1,4 +1,4 @@
-#include "tabsforeditorswidget.h"
+#include "tabbar.h"
 
 #include "tabbededitorconstants.h"
 
@@ -17,7 +17,7 @@ using namespace Core::Internal;
 
 using namespace TabbedEditor::Internal;
 
-TabsForEditorsWidget::TabsForEditorsWidget(QWidget *parent) :
+TabBar::TabBar(QWidget *parent) :
     QTabBar(parent)
 {
     setExpanding(false);
@@ -79,7 +79,7 @@ TabsForEditorsWidget::TabsForEditorsWidget(QWidget *parent) :
     connect(nextTabAction, SIGNAL(triggered()), this, SLOT(nextTabAction()));
 }
 
-void TabsForEditorsWidget::updateCurrentTab(Core::IEditor *editor)
+void TabBar::updateCurrentTab(Core::IEditor *editor)
 {
     const int index = m_editors.indexOf(editor);
     if (index == -1)
@@ -87,7 +87,7 @@ void TabsForEditorsWidget::updateCurrentTab(Core::IEditor *editor)
     setCurrentIndex(index);
 }
 
-void TabsForEditorsWidget::handleCurrentChanged(int index)
+void TabBar::handleCurrentChanged(int index)
 {
     if (index < 0 || index >= m_editors.size())
         return;
@@ -95,7 +95,7 @@ void TabsForEditorsWidget::handleCurrentChanged(int index)
     Core::EditorManager::instance()->activateEditor(m_editors[index]);
 }
 
-void TabsForEditorsWidget::handleEditorOpened(Core::IEditor *editor)
+void TabBar::handleEditorOpened(Core::IEditor *editor)
 {
     Core::IDocument *document = editor->document();
 
@@ -113,7 +113,7 @@ void TabsForEditorsWidget::handleEditorOpened(Core::IEditor *editor)
     });
 }
 
-void TabsForEditorsWidget::handlerEditorClosed(QList<Core::IEditor*> editors)
+void TabBar::handlerEditorClosed(QList<Core::IEditor*> editors)
 {
     for (Core::IEditor *editor : editors) {
         const int index = m_editors.indexOf(editor);
@@ -125,7 +125,7 @@ void TabsForEditorsWidget::handlerEditorClosed(QList<Core::IEditor*> editors)
     }
 }
 
-void TabsForEditorsWidget::handleTabCloseRequested(int index)
+void TabBar::handleTabCloseRequested(int index)
 {
     if (index < 0 || index >= m_editors.size())
         return;
@@ -134,7 +134,7 @@ void TabsForEditorsWidget::handleTabCloseRequested(int index)
     removeTab(index);
 }
 
-void TabsForEditorsWidget::selectTabAction()
+void TabBar::selectTabAction()
 {
     QShortcut *shortcut = qobject_cast<QShortcut*>(sender());
     if (!shortcut)
@@ -143,7 +143,7 @@ void TabsForEditorsWidget::selectTabAction()
     setCurrentIndex(index);
 }
 
-void TabsForEditorsWidget::prevTabAction()
+void TabBar::prevTabAction()
 {
     int index = currentIndex();
     if (index >= 1)
@@ -152,7 +152,7 @@ void TabsForEditorsWidget::prevTabAction()
         setCurrentIndex(count() - 1);
 }
 
-void TabsForEditorsWidget::nextTabAction()
+void TabBar::nextTabAction()
 {
     int index = currentIndex();
     if (index < count() - 1)

@@ -1,7 +1,7 @@
 #include "tabbededitorplugin.h"
 
 #include "tabbededitorconstants.h"
-#include "tabsforeditorswidget.h"
+#include "tabbar.h"
 
 #include <coreplugin/editormanager/editormanager.h>
 #include <coreplugin/icore.h>
@@ -33,7 +33,7 @@ bool TabbedEditorPlugin::initialize(const QStringList &arguments, QString *error
     layout->setSpacing(0);
     layout->setContentsMargins(0, 0, 0, 0);
 
-    m_tabBar = new TabsForEditorsWidget();
+    m_tabBar = new TabBar();
     layout->addWidget(m_tabBar);
     layout->addWidget(mainWindow->centralWidget());
 

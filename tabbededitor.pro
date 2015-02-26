@@ -31,12 +31,12 @@ DEFINES += TABBEDEDITOR_LIBRARY
 
 SOURCES += \
     tabbededitorplugin.cpp \
-    tabsforeditorswidget.cpp
+    tabbar.cpp
 
 HEADERS += \
     tabbededitorplugin.h \
     tabbededitorconstants.h \
-    tabsforeditorswidget.h
+    tabbar.h
 
 RESOURCES += \
     resources/res.qrc

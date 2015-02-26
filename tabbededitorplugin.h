@@ -10,7 +10,7 @@ QT_END_NAMESPACE
 namespace TabbedEditor {
 namespace Internal {
 
-class TabsForEditorsWidget;
+class TabBar;
 
 class TabbedEditorPlugin : public ExtensionSystem::IPlugin
 {
@@ -28,7 +28,7 @@ private slots:
 private:
     static inline QString getQssStringFromColor(const QColor &color);
 
-    TabsForEditorsWidget *m_tabBar = nullptr;
+    TabBar *m_tabBar = nullptr;
     bool m_styleUpdatedToBaseColor = false;
 };
 
