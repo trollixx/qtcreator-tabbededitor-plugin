@@ -79,7 +79,7 @@ void TabbedEditorPlugin::updateStyleToBaseColor()
         shadowColorQss = getQssStringFromColor(theme->color(Utils::Theme::BackgroundColorNormal));
     }
 
-    QString stylesheetPattern = getStylesheetPatternFromFile(QStringLiteral(":/styles/styles/default.qss"));
+    QString stylesheetPattern = getStylesheetPatternFromFile(QStringLiteral(":/styles/default.qss"));
 
     stylesheetPattern = stylesheetPattern.replace(QLatin1String("%FRAME_BACKGROUND_COLOR%"), highlightColorQss);
     stylesheetPattern = stylesheetPattern.replace(QLatin1String("%TAB_SELECTED_BORDER_COLOR%"), selectedTabBorderColorQss);

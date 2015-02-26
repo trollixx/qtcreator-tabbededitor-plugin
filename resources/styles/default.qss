@@ -8,17 +8,17 @@ QTabBar::tear {
 }
 
 QTabBar::tab:selected>.QTabBar::close-button {
-    image: url(:/icons/icons/close_button_dark.png);
+    image: url(:/icons/close_button_dark.png);
     subcontrol-position: right;
 }
 
 QTabBar::close-button {
-    image: url(:/icons/icons/close_button_dark.png);
+    image: url(:/icons/close_button_dark.png);
     subcontrol-position: right;
 }
 
 QTabBar::close-button:hover {
-    image: url(:/icons/icons/close_button_light_grey.png);
+    image: url(:/icons/close_button_light_grey.png);
     subcontrol-position: right;
 }
 
