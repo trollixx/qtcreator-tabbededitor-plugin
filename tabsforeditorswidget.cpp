@@ -11,48 +11,54 @@
 #include <coreplugin/idocument.h>
 
 #include <QShortcut>
-#include <QTabWidget>
+#include <QTabBar>
 
 using namespace Core::Internal;
 
 using namespace TabbedEditor::Internal;
 
 TabsForEditorsWidget::TabsForEditorsWidget(QWidget *parent) :
-    QWidget(parent),
-    m_tabWidget(new QTabWidget(this))
+    QTabBar(parent)
 {
-    QSizePolicy sizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
-    sizePolicy.setHorizontalStretch(1);
-    sizePolicy.setVerticalStretch(0);
-    sizePolicy.setHeightForWidth(m_tabWidget->sizePolicy().hasHeightForWidth());
-    m_tabWidget->setSizePolicy(sizePolicy);
-    m_tabWidget->setUsesScrollButtons(true);
-    m_tabWidget->setTabsClosable(true);
-    m_tabWidget->setMovable(true);
+    setExpanding(false);
+    setMovable(true);
+    setTabsClosable(true);
+    setUsesScrollButtons(true);
+
+    QSizePolicy sp(QSizePolicy::Preferred, QSizePolicy::Fixed);
+    sp.setHorizontalStretch(1);
+    sp.setVerticalStretch(0);
+    sp.setHeightForWidth(sizePolicy().hasHeightForWidth());
+    setSizePolicy(sp);
+
+    connect(this, &QTabBar::tabMoved, [this](int from, int to) {
+        m_editors.move(from, to);
+    });
 
     Core::EditorManager *em = Core::EditorManager::instance();
 
-    foreach (Core::IEditor *editor, em->visibleEditors()) {
-        QWidget *tab = new QWidget();
-        const int index = m_tabWidget->addTab(tab, editor->document()->displayName());
-        m_tabWidget->setTabToolTip(index, editor->document()->filePath());
-        m_tabsEditors.insert(tab, editor);
+    /* TODO: That can happen only on session restore
+    for (Core::IEditor *editor : em->visibleEditors()) {
+        const int index = addTab(editor->document()->displayName());
+        setTabToolTip(index, editor->document()->filePath());
+        m_editors.append(editor);
     }
+    */
 
     connect(em, SIGNAL(editorOpened(Core::IEditor*)), SLOT(handleEditorOpened(Core::IEditor*)));
     connect(em, SIGNAL(currentEditorChanged(Core::IEditor*)), SLOT(updateCurrentTab(Core::IEditor*)));
     connect(em, SIGNAL(editorsClosed(QList<Core::IEditor*>)), SLOT(handlerEditorClosed(QList<Core::IEditor*>)));
 
-    connect(m_tabWidget, SIGNAL(currentChanged(int)), SLOT(handleCurrentChanged(int)));
-    connect(m_tabWidget, SIGNAL(tabCloseRequested(int)), SLOT(handleTabCloseRequested(int)));
+    connect(this, SIGNAL(currentChanged(int)), SLOT(handleCurrentChanged(int)));
+    connect(this, SIGNAL(tabCloseRequested(int)), SLOT(handleTabCloseRequested(int)));
 
     const QString shortCutSequence = QStringLiteral("Ctrl+Alt+%1");
     for (int i = 1; i <= 10; ++i) {
         int key = i;
         if (key == 10)
             key = 0;
-        QShortcut *shortcut = new QShortcut(shortCutSequence.arg(key), m_tabWidget);
-        m_tabShortcuts.append(shortcut);
+        QShortcut *shortcut = new QShortcut(shortCutSequence.arg(key), this);
+        m_shortcuts.append(shortcut);
         connect(shortcut, SIGNAL(activated()), SLOT(selectTabAction()));
     }
 
@@ -73,97 +79,59 @@ TabsForEditorsWidget::TabsForEditorsWidget(QWidget *parent) :
     connect(nextTabAction, SIGNAL(triggered()), this, SLOT(nextTabAction()));
 }
 
-QWidget *TabsForEditorsWidget::tabWidget() const
-{
-    return m_tabWidget;
-}
-
 void TabsForEditorsWidget::updateCurrentTab(Core::IEditor *editor)
 {
-    disconnect(m_tabWidget, SIGNAL(currentChanged(int)), this, SLOT(handleCurrentChanged(int))); //prevent update
-    if (!editor)
+    const int index = m_editors.indexOf(editor);
+    if (index == -1)
         return;
-    QWidget *currentTab = getTab(editor);
-    if (!currentTab)
-        return;
-    m_tabWidget->setCurrentWidget(currentTab);
-    connect(m_tabWidget, SIGNAL(currentChanged(int)), this, SLOT(handleCurrentChanged(int))); //restore update
+    setCurrentIndex(index);
 }
-
 
 void TabsForEditorsWidget::handleCurrentChanged(int index)
 {
-    if (index == -1)
+    if (index < 0 || index >= m_editors.size())
         return;
 
-    QWidget *tab = m_tabWidget->widget(index);
-    if (!tab)
-        return;
-    if (m_tabsEditors.contains(tab)) {
-        Core::IEditor *editor = getEditor(tab);
-        if (!editor)
-            return;
-        Core::EditorManager::instance()->activateEditor(editor);
-    }
+    Core::EditorManager::instance()->activateEditor(m_editors[index]);
 }
 
 void TabsForEditorsWidget::handleEditorOpened(Core::IEditor *editor)
 {
-    QWidget *tab = new QWidget();
     Core::IDocument *document = editor->document();
 
-    const int index = m_tabWidget->addTab(tab, document->displayName());
-    m_tabWidget->setTabToolTip(index, document->filePath());
-    m_tabWidget->setTabIcon(index, Core::FileIconProvider::icon(QFileInfo(document->filePath())));
+    const int index = addTab(document->displayName());
+    setTabToolTip(index, document->filePath());
+    setTabIcon(index, Core::FileIconProvider::icon(QFileInfo(document->filePath())));
 
-    m_tabsEditors.insert(tab, editor);
+    m_editors.append(editor);
 
-    connect(document, &Core::IDocument::changed, [this, editor, document]() {
-        QString tabTitle = document->displayName();
+    connect(document, &Core::IDocument::changed, [this, index, document]() {
+        QString tabText = document->displayName();
         if (document->isModified())
-            tabTitle += QLatin1Char('*');
-
-        const int tabIndex = m_tabWidget->indexOf(getTab(editor));
-        m_tabWidget->setTabText(tabIndex, tabTitle);
+            tabText += QLatin1Char('*');
+        setTabText(index, tabText);
     });
 }
 
 void TabsForEditorsWidget::handlerEditorClosed(QList<Core::IEditor*> editors)
 {
-    foreach (Core::IEditor *editor, editors) {
-        if (!editor)
-            continue;
-        QWidget *tab = getTab(editor);
-        if (!tab)
+    for (Core::IEditor *editor : editors) {
+        const int index = m_editors.indexOf(editor);
+        if (index == -1)
             continue;
 
-        m_tabsEditors.remove(tab);
-        if (-1 < m_tabWidget->indexOf(tab))
-            m_tabWidget->removeTab(m_tabWidget->indexOf(tab));
+        m_editors.removeAt(index);
+        removeTab(index);
     }
 }
 
 void TabsForEditorsWidget::handleTabCloseRequested(int index)
 {
-    if (-1 < index) {
-        QWidget *tab = m_tabWidget->widget(index);
-        if (!tab)
-            return;
-        QList<Core::IEditor*> editorsToClose;
-        editorsToClose.clear();
-        if (m_tabsEditors.contains(tab)) {
-            Core::IEditor *editor = getEditor(tab);
-            if (!editor)
-                return;
-            editorsToClose.append(editor);
+    if (index < 0 || index >= m_editors.size())
+        return;
 
-            Core::EditorManager::instance()->closeEditors(editorsToClose);
-            if (m_tabsEditors.contains(tab))
-                m_tabsEditors.remove(tab);
-            if (-1 < m_tabWidget->indexOf(tab))
-                m_tabWidget->removeTab(m_tabWidget->indexOf(tab));
-        }
-    }
+    Core::EditorManager::instance()->closeEditor(m_editors.takeAt(index));
+    removeTab(index);
 }
 
 void TabsForEditorsWidget::selectTabAction()
@@ -171,48 +139,24 @@ void TabsForEditorsWidget::selectTabAction()
     QShortcut *shortcut = qobject_cast<QShortcut*>(sender());
     if (!shortcut)
         return;
-    int index = m_tabShortcuts.indexOf(shortcut);
-    m_tabWidget->setCurrentIndex(index);
+    int index = m_shortcuts.indexOf(shortcut);
+    setCurrentIndex(index);
 }
 
 void TabsForEditorsWidget::prevTabAction()
 {
-    int currentIndex = m_tabWidget->currentIndex();
-    if (currentIndex >= 1)
-        m_tabWidget->setCurrentIndex(currentIndex - 1);
+    int index = currentIndex();
+    if (index >= 1)
+        setCurrentIndex(index - 1);
     else
-        m_tabWidget->setCurrentIndex(m_tabWidget->count() - 1);
+        setCurrentIndex(count() - 1);
 }
 
 void TabsForEditorsWidget::nextTabAction()
 {
-    int currentIndex = m_tabWidget->currentIndex();
-    if (currentIndex < m_tabWidget->count() - 1)
-        m_tabWidget->setCurrentIndex(currentIndex + 1);
+    int index = currentIndex();
+    if (index < count() - 1)
+        setCurrentIndex(index + 1);
     else
-        m_tabWidget->setCurrentIndex(0);
+        setCurrentIndex(0);
 }
-
-Core::IEditor *TabsForEditorsWidget::getEditor(QWidget *tab) const
-{
-    return m_tabsEditors.value(tab);
-}
-
-QWidget *TabsForEditorsWidget::getTab(Core::IEditor *editor) const
-{
-    return m_tabsEditors.key(editor);
-}
-
-bool TabsForEditorsWidget::isEditorWidget(QObject *obj) const
-{
-    if (!obj)
-        return false;
-    QMapIterator<QWidget*, Core::IEditor*> i(m_tabsEditors);
-    while (i.hasNext()) {
-        i.next();
-        if (obj == i.value()->widget())
-            return true;
-    }
-    return false;
-}
-

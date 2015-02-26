@@ -19,11 +19,6 @@ QFrame {
     height: 20px;
 }
 
-/* The tab widget frame */
-QTabWidget::pane {
-    height: 0px;
-}
-
 QTabBar::tear {
     width: 0px;
 }
@@ -31,10 +26,6 @@ QTabBar::tear {
 QToolButton {
     background-color: %TAB_SELECTED_BACKGROUND_COLOR% ; /* #636363*/
     border: 1px solid %TAB_BORDER_COLOR%; /*#9a9a9a*/
-}
- 
-QTabWidget::tab-bar {
-    alignment: left; /*for Mac OS X (default alignment is "center")*/
 }
 
 /* Style the tab using the tab sub-control. Note that it reads QTabBar _not_ QTabWidget */

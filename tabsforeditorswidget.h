@@ -1,12 +1,10 @@
 #ifndef TABSFOREDITORSWIDGET_H
 #define TABSFOREDITORSWIDGET_H
 
-#include <QMap>
-#include <QWidget>
+#include <QTabBar>
 
 QT_BEGIN_NAMESPACE
 class QShortcut;
-class QTabWidget;
 QT_END_NAMESPACE
 
 namespace Core {
@@ -16,18 +14,16 @@ class IEditor;
 namespace TabbedEditor {
 namespace Internal {
 
-class TabsForEditorsWidget : public QWidget
+class TabsForEditorsWidget : public QTabBar
 {
     Q_OBJECT
 public:
     TabsForEditorsWidget(QWidget *parent = 0);
 
-    QWidget *tabWidget() const;
-
 private slots:
-    void updateCurrentTab(Core::IEditor *getEditor);
+    void updateCurrentTab(Core::IEditor *editor);
     void handleCurrentChanged(int index);
-    void handleEditorOpened(Core::IEditor *getEditor);
+    void handleEditorOpened(Core::IEditor *editor);
     void handlerEditorClosed(QList<Core::IEditor*> editors);
     void handleTabCloseRequested(int index);
     void selectTabAction();
@@ -35,13 +31,8 @@ private slots:
     void nextTabAction();
 
 private:
-    Core::IEditor *getEditor(QWidget *getTab) const;
-    QWidget *getTab(Core::IEditor *getEditor) const;
-    bool isEditorWidget(QObject *obj) const;
-
-    QTabWidget *m_tabWidget;
-    QMap<QWidget *, Core::IEditor *> m_tabsEditors;
-    QList<QShortcut *> m_tabShortcuts;
+    QList<Core::IEditor *> m_editors;
+    QList<QShortcut *> m_shortcuts;
 };
 
 } // namespace Internal

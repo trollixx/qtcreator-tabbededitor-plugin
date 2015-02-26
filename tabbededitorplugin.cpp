@@ -30,8 +30,8 @@ bool TabbedEditorPlugin::initialize(const QStringList &arguments, QString *error
     QHBoxLayout *layout = new QHBoxLayout();
     layout->setSpacing(0);
     layout->setContentsMargins(0, 0, 0, 0);
-    m_tabbedWidget = new TabsForEditorsWidget(m_backgroundFrame);
-    layout->addWidget(m_tabbedWidget->tabWidget());
+    m_tabBar = new TabsForEditorsWidget(m_backgroundFrame);
+    layout->addWidget(m_tabBar);
     m_backgroundFrame->setLayout(layout);
 
     QMainWindow *mainWindow = qobject_cast<QMainWindow *>(Core::ICore::mainWindow());
@@ -53,8 +53,6 @@ bool TabbedEditorPlugin::initialize(const QStringList &arguments, QString *error
     mainWindow->setCentralWidget(newCentralWidget);
 
     m_backgroundFrame->setHidden(true);
-
-    addAutoReleasedObject(m_tabbedWidget);
 
     return true;
 }
