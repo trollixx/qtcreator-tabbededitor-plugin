@@ -7,6 +7,7 @@
 #include <coreplugin/coreconstants.h>
 #include <coreplugin/editormanager/editormanager.h>
 #include <coreplugin/editormanager/ieditor.h>
+#include <coreplugin/fileiconprovider.h>
 #include <coreplugin/idocument.h>
 
 #include <QShortcut>
@@ -33,7 +34,8 @@ TabsForEditorsWidget::TabsForEditorsWidget(QWidget *parent) :
 
     foreach (Core::IEditor *editor, em->visibleEditors()) {
         QWidget *tab = new QWidget();
-        m_tabWidget->addTab(tab, editor->document()->displayName());
+        const int index = m_tabWidget->addTab(tab, editor->document()->displayName());
+        m_tabWidget->setTabToolTip(index, editor->document()->filePath());
         m_tabsEditors.insert(tab, editor);
     }
 
@@ -108,10 +110,14 @@ void TabsForEditorsWidget::handleCurrentChanged(int index)
 void TabsForEditorsWidget::handleEditorOpened(Core::IEditor *editor)
 {
     QWidget *tab = new QWidget();
-    m_tabWidget->addTab(tab, editor->document()->displayName());
+    Core::IDocument *document = editor->document();
+
+    const int index = m_tabWidget->addTab(tab, document->displayName());
+    m_tabWidget->setTabToolTip(index, document->filePath());
+    m_tabWidget->setTabIcon(index, Core::FileIconProvider::icon(QFileInfo(document->filePath())));
+
     m_tabsEditors.insert(tab, editor);
 
-    Core::IDocument *document = editor->document();
     connect(document, &Core::IDocument::changed, [this, editor, document]() {
         QString tabTitle = document->displayName();
         if (document->isModified())
