@@ -5,6 +5,7 @@ QTC_LIB_DEPENDS += \
     utils
 QTC_PLUGIN_DEPENDS += \
     coreplugin \
+    projectexplorer \
     texteditor
 
 ## set the QTC_SOURCE environment variable to override the setting here

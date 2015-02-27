@@ -9,6 +9,7 @@
 #include <coreplugin/editormanager/ieditor.h>
 #include <coreplugin/fileiconprovider.h>
 #include <coreplugin/idocument.h>
+#include <projectexplorer/session.h>
 
 #include <QMouseEvent>
 #include <QShortcut>
@@ -17,6 +18,8 @@
 using namespace Core::Internal;
 
 using namespace TabbedEditor::Internal;
+
+/// TODO: Use Core::DocumentModel for everything
 
 TabBar::TabBar(QWidget *parent) :
     QTabBar(parent)
@@ -44,6 +47,12 @@ TabBar::TabBar(QWidget *parent) :
 
     connect(this, &QTabBar::currentChanged, this, &TabBar::activateEditor);
     connect(this, &QTabBar::tabCloseRequested, this, &TabBar::closeTab);
+
+    ProjectExplorer::SessionManager *sm = ProjectExplorer::SessionManager::instance();
+    connect(sm, &ProjectExplorer::SessionManager::sessionLoaded, [this, em]() {
+        for (Core::DocumentModel::Entry *entry : Core::DocumentModel::entries())
+            em->activateEditorForEntry(entry, Core::EditorManager::DoNotChangeCurrentEditor);
+    });
 
     const QString shortCutSequence = QStringLiteral("Ctrl+Alt+%1");
     for (int i = 1; i <= 10; ++i) {
