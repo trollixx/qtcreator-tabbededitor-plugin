@@ -38,20 +38,12 @@ TabBar::TabBar(QWidget *parent) :
 
     Core::EditorManager *em = Core::EditorManager::instance();
 
-    /* TODO: That can happen only on session restore
-    for (Core::IEditor *editor : em->visibleEditors()) {
-        const int index = addTab(editor->document()->displayName());
-        setTabToolTip(index, editor->document()->filePath());
-        m_editors.append(editor);
-    }
-    */
+    connect(em, &Core::EditorManager::editorOpened, this, &TabBar::addEditorTab);
+    connect(em, &Core::EditorManager::editorsClosed, this, &TabBar::removeEditorTabs);
+    connect(em, SIGNAL(currentEditorChanged(Core::IEditor*)), SLOT(selectEditorTab(Core::IEditor*)));
 
-    connect(em, SIGNAL(editorOpened(Core::IEditor*)), SLOT(handleEditorOpened(Core::IEditor*)));
-    connect(em, SIGNAL(currentEditorChanged(Core::IEditor*)), SLOT(updateCurrentTab(Core::IEditor*)));
-    connect(em, SIGNAL(editorsClosed(QList<Core::IEditor*>)), SLOT(handlerEditorClosed(QList<Core::IEditor*>)));
-
-    connect(this, SIGNAL(currentChanged(int)), SLOT(handleCurrentChanged(int)));
-    connect(this, SIGNAL(tabCloseRequested(int)), SLOT(handleTabCloseRequested(int)));
+    connect(this, &QTabBar::currentChanged, this, &TabBar::activateEditor);
+    connect(this, &QTabBar::tabCloseRequested, this, &TabBar::closeTab);
 
     const QString shortCutSequence = QStringLiteral("Ctrl+Alt+%1");
     for (int i = 1; i <= 10; ++i) {
@@ -79,15 +71,7 @@ TabBar::TabBar(QWidget *parent) :
     connect(nextTabAction, SIGNAL(triggered()), this, SLOT(nextTabAction()));
 }
 
-void TabBar::updateCurrentTab(Core::IEditor *editor)
-{
-    const int index = m_editors.indexOf(editor);
-    if (index == -1)
-        return;
-    setCurrentIndex(index);
-}
-
-void TabBar::handleCurrentChanged(int index)
+void TabBar::activateEditor(int index)
 {
     if (index < 0 || index >= m_editors.size())
         return;
@@ -95,13 +79,13 @@ void TabBar::handleCurrentChanged(int index)
     Core::EditorManager::instance()->activateEditor(m_editors[index]);
 }
 
-void TabBar::handleEditorOpened(Core::IEditor *editor)
+void TabBar::addEditorTab(Core::IEditor *editor)
 {
     Core::IDocument *document = editor->document();
 
     const int index = addTab(document->displayName());
-    setTabToolTip(index, document->filePath());
     setTabIcon(index, Core::FileIconProvider::icon(QFileInfo(document->filePath())));
+    setTabToolTip(index, document->filePath());
 
     m_editors.append(editor);
 
@@ -113,19 +97,28 @@ void TabBar::handleEditorOpened(Core::IEditor *editor)
     });
 }
 
-void TabBar::handlerEditorClosed(QList<Core::IEditor*> editors)
+void TabBar::removeEditorTabs(QList<Core::IEditor *> editors)
 {
+    blockSignals(true); // Avoid calling activateEditor()
     for (Core::IEditor *editor : editors) {
         const int index = m_editors.indexOf(editor);
         if (index == -1)
             continue;
-
         m_editors.removeAt(index);
         removeTab(index);
     }
+    blockSignals(false);
 }
 
-void TabBar::handleTabCloseRequested(int index)
+void TabBar::selectEditorTab(Core::IEditor *editor)
+{
+    const int index = m_editors.indexOf(editor);
+    if (index == -1)
+        return;
+    setCurrentIndex(index);
+}
+
+void TabBar::closeTab(int index)
 {
     if (index < 0 || index >= m_editors.size())
         return;
@@ -155,6 +148,6 @@ void TabBar::nextTabAction()
 void TabBar::mouseReleaseEvent(QMouseEvent *event)
 {
     if (event->button() == Qt::MiddleButton)
-        handleTabCloseRequested(tabAt(event->pos()));
+        closeTab(tabAt(event->pos()));
     QTabBar::mouseReleaseEvent(event);
 }

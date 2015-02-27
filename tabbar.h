@@ -21,11 +21,14 @@ public:
     explicit TabBar(QWidget *parent = 0);
 
 private slots:
-    void updateCurrentTab(Core::IEditor *editor);
-    void handleCurrentChanged(int index);
-    void handleEditorOpened(Core::IEditor *editor);
-    void handlerEditorClosed(QList<Core::IEditor*> editors);
-    void handleTabCloseRequested(int index);
+    void activateEditor(int index);
+
+    void addEditorTab(Core::IEditor *editor);
+    void removeEditorTabs(QList<Core::IEditor *> editors);
+    void selectEditorTab(Core::IEditor *editor);
+
+    void closeTab(int index);
+
     void prevTabAction();
     void nextTabAction();
 
