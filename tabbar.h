@@ -33,6 +33,7 @@ private slots:
     void nextTabAction();
 
 protected:
+    void contextMenuEvent(QContextMenuEvent *event) override;
     void mouseReleaseEvent(QMouseEvent *event) override;
 
 private:

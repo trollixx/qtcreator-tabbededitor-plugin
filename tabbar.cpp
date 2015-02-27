@@ -11,6 +11,7 @@
 #include <coreplugin/idocument.h>
 #include <projectexplorer/session.h>
 
+#include <QMenu>
 #include <QMouseEvent>
 #include <QShortcut>
 #include <QTabBar>
@@ -152,6 +153,23 @@ void TabBar::nextTabAction()
         setCurrentIndex(index + 1);
     else
         setCurrentIndex(0);
+}
+
+void TabBar::contextMenuEvent(QContextMenuEvent *event)
+{
+    const int index = tabAt(event->pos());
+    if (index == -1)
+        return;
+
+    QScopedPointer<QMenu> menu(new QMenu());
+
+    Core::IEditor *editor = m_editors[index];
+    Core::DocumentModel::Entry *entry = Core::DocumentModel::entryForDocument(editor->document());
+    Core::EditorManager::addSaveAndCloseEditorActions(menu.data(), entry, editor);
+    menu->addSeparator();
+    Core::EditorManager::addNativeDirAndOpenWithActions(menu.data(), entry);
+
+    menu->exec(mapToGlobal(event->pos()));
 }
 
 void TabBar::mouseReleaseEvent(QMouseEvent *event)
