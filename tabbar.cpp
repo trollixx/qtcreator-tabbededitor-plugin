@@ -51,7 +51,7 @@ TabBar::TabBar(QWidget *parent) :
 
     ProjectExplorer::SessionManager *sm = ProjectExplorer::SessionManager::instance();
     connect(sm, &ProjectExplorer::SessionManager::sessionLoaded, [this, em]() {
-        for (Core::DocumentModel::Entry *entry : Core::DocumentModel::entries())
+        foreach (Core::DocumentModel::Entry *entry, Core::DocumentModel::entries())
             em->activateEditorForEntry(entry, Core::EditorManager::DoNotChangeCurrentEditor);
     });
 
@@ -110,7 +110,7 @@ void TabBar::addEditorTab(Core::IEditor *editor)
 void TabBar::removeEditorTabs(QList<Core::IEditor *> editors)
 {
     blockSignals(true); // Avoid calling activateEditor()
-    for (Core::IEditor *editor : editors) {
+    foreach (Core::IEditor *editor, editors) {
         const int index = m_editors.indexOf(editor);
         if (index == -1)
             continue;

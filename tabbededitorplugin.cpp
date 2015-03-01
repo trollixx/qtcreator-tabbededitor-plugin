@@ -15,6 +15,12 @@
 
 using namespace TabbedEditor::Internal;
 
+TabbedEditorPlugin::TabbedEditorPlugin() :
+    m_tabBar(nullptr),
+    m_styleUpdatedToBaseColor(false)
+{
+}
+
 bool TabbedEditorPlugin::initialize(const QStringList &arguments, QString *errorString)
 {
     Q_UNUSED(arguments)
