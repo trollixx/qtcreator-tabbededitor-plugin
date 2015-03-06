@@ -1,6 +1,6 @@
-#include "tabbededitorplugin.h"
+#include "plugin.h"
 
-#include "tabbededitorconstants.h"
+#include "constants.h"
 #include "tabbar.h"
 
 #include <coreplugin/editormanager/editormanager.h>

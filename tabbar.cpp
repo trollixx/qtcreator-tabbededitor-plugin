@@ -1,6 +1,6 @@
 #include "tabbar.h"
 
-#include "tabbededitorconstants.h"
+#include "constants.h"
 
 #include <coreplugin/actionmanager/actionmanager.h>
 #include <coreplugin/actionmanager/command.h>

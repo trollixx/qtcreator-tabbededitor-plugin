@@ -1,5 +1,5 @@
-#ifndef TABBEDEDITORPLUGIN_H
-#define TABBEDEDITORPLUGIN_H
+#ifndef PLUGIN_H
+#define PLUGIN_H
 
 #include <extensionsystem/iplugin.h>
 
@@ -37,4 +37,4 @@ private:
 } // namespace Internal
 } // namespace TabbedEditor
 
-#endif // TABBEDEDITORPLUGIN_H
+#endif // PLUGIN_H

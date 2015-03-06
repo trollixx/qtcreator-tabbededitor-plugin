@@ -31,12 +31,12 @@ DEFINES += TABBEDEDITOR_LIBRARY
 # TabbedEditor files
 
 SOURCES += \
-    tabbededitorplugin.cpp \
+    plugin.cpp \
     tabbar.cpp
 
 HEADERS += \
-    tabbededitorplugin.h \
-    tabbededitorconstants.h \
+    constants.h \
+    plugin.h \
     tabbar.h
 
 RESOURCES += \
