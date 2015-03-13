@@ -99,7 +99,10 @@ void TabBar::addEditorTab(Core::IEditor *editor)
 
     m_editors.append(editor);
 
-    connect(document, &Core::IDocument::changed, [this, index, document]() {
+    connect(document, &Core::IDocument::changed, [this, editor, document]() {
+        const int index = m_editors.indexOf(editor);
+        if (index == -1)
+            return;
         QString tabText = document->displayName();
         if (document->isModified())
             tabText += QLatin1Char('*');
