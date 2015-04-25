@@ -94,8 +94,8 @@ void TabBar::addEditorTab(Core::IEditor *editor)
     Core::IDocument *document = editor->document();
 
     const int index = addTab(document->displayName());
-    setTabIcon(index, Core::FileIconProvider::icon(QFileInfo(document->filePath())));
-    setTabToolTip(index, document->filePath());
+    setTabIcon(index, Core::FileIconProvider::icon(document->filePath().toFileInfo()));
+    setTabToolTip(index, document->filePath().toString());
 
     m_editors.append(editor);
 
