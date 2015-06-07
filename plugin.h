@@ -3,10 +3,6 @@
 
 #include <extensionsystem/iplugin.h>
 
-QT_BEGIN_NAMESPACE
-class QFrame;
-QT_END_NAMESPACE
-
 namespace TabbedEditor {
 namespace Internal {
 

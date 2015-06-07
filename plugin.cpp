@@ -10,7 +10,6 @@
 
 #include <QBoxLayout>
 #include <QFile>
-#include <QFrame>
 #include <QMainWindow>
 
 using namespace TabbedEditor::Internal;
