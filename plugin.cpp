@@ -67,7 +67,7 @@ void TabbedEditorPlugin::updateStyleToBaseColor()
     QString selectedTabBorderColorQss;
     QString shadowColorQss;
 
-    if(theme->widgetStyle() == Utils::Theme::StyleDefault) {
+    if(theme->preferredStyles().isEmpty()) {
         baseColorQss = getQssStringFromColor(Utils::StyleHelper::baseColor().lighter(130));
         borderColorQss = getQssStringFromColor(Utils::StyleHelper::borderColor());
         highlightColorQss = getQssStringFromColor(Utils::StyleHelper::baseColor());
